@@ -9,7 +9,7 @@ O sistema foi construído seguindo os princípios de arquitetura REST e nível d
 # Tecnologias Utilizadas
 
 - Java 17
-- Spring Boota
+- Spring Boot
 - Spring Data JPA
 - Spring HATEOAS
 - Maven
