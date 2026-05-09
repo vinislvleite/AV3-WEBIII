@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.autobots.automanager.dtos.ServicoDto;
 import com.autobots.automanager.entitades.Servico;
+import com.autobots.automanager.excecoes.EntidadeNaoEncontradaException;
 import com.autobots.automanager.repositorios.RepositorioServico;
 
 @Service
@@ -15,14 +16,12 @@ public class ServicoService {
     private RepositorioServico repositorio;
 
     public List<ServicoDto> listarTodos() {
-        return repositorio.findAll().stream()
-                .map(this::paraDto)
-                .collect(Collectors.toList());
+        return repositorio.findAll().stream().map(this::paraDto).collect(Collectors.toList());
     }
 
     public ServicoDto buscarPorId(Long id) {
         return paraDto(repositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Serviço não encontrado: " + id)));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Serviço não encontrado: " + id)));
     }
 
     public ServicoDto cadastrar(Servico servico) {
@@ -31,7 +30,7 @@ public class ServicoService {
 
     public ServicoDto atualizar(Long id, Servico dados) {
         Servico servico = repositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Serviço não encontrado: " + id));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Serviço não encontrado: " + id));
         servico.setNome(dados.getNome());
         servico.setDescricao(dados.getDescricao());
         servico.setValor(dados.getValor());
@@ -39,8 +38,7 @@ public class ServicoService {
     }
 
     public void deletar(Long id) {
-        repositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Serviço não encontrado: " + id));
+        repositorio.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Serviço não encontrado: " + id));
         repositorio.deleteById(id);
     }
 

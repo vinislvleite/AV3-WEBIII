@@ -50,13 +50,10 @@ public class VeiculoControle {
         return ResponseEntity.ok(assembler.toModel(dto));
     }
 
-    @PostMapping
-    public ResponseEntity<EntityModel<VeiculoDto>> cadastrar(@RequestBody Veiculo veiculo) {
-
-        VeiculoDto dto = servico.cadastrar(veiculo);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(assembler.toModel(dto));
+    @PostMapping("/proprietario/{proprietarioId}")
+    public ResponseEntity<EntityModel<VeiculoDto>> cadastrar(@PathVariable Long proprietarioId, @RequestBody Veiculo veiculo) {
+        VeiculoDto dto = servico.cadastrar(proprietarioId, veiculo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(dto));
     }
 
     @PutMapping("/{id}")

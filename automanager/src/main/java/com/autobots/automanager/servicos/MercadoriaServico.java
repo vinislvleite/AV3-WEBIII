@@ -1,11 +1,13 @@
 package com.autobots.automanager.servicos;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.autobots.automanager.dtos.MercadoriaDto;
 import com.autobots.automanager.entitades.Mercadoria;
+import com.autobots.automanager.excecoes.EntidadeNaoEncontradaException;
 import com.autobots.automanager.repositorios.RepositorioMercadoria;
 
 @Service
@@ -15,23 +17,22 @@ public class MercadoriaServico {
     private RepositorioMercadoria repositorio;
 
     public List<MercadoriaDto> listarTodas() {
-        return repositorio.findAll().stream()
-                .map(this::paraDto)
-                .collect(Collectors.toList());
+        return repositorio.findAll().stream().map(this::paraDto).collect(Collectors.toList());
     }
 
     public MercadoriaDto buscarPorId(Long id) {
         return paraDto(repositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mercadoria não encontrada: " + id)));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Mercadoria não encontrada: " + id)));
     }
 
     public MercadoriaDto cadastrar(Mercadoria mercadoria) {
-        return paraDto(repositorio.save(mercadoria));
-    }
+    mercadoria.setCadastro(new Date()); 
+    return paraDto(repositorio.save(mercadoria));
+}
 
     public MercadoriaDto atualizar(Long id, Mercadoria dados) {
         Mercadoria mercadoria = repositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mercadoria não encontrada: " + id));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Mercadoria não encontrada: " + id));
         mercadoria.setNome(dados.getNome());
         mercadoria.setDescricao(dados.getDescricao());
         mercadoria.setValor(dados.getValor());
@@ -42,8 +43,7 @@ public class MercadoriaServico {
     }
 
     public void deletar(Long id) {
-        repositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mercadoria não encontrada: " + id));
+        repositorio.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Mercadoria não encontrada: " + id));
         repositorio.deleteById(id);
     }
 
