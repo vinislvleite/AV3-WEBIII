@@ -43,7 +43,8 @@ public class EmpresaControle {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<EmpresaDto>> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<EmpresaDto>> buscarPorId(
+            @PathVariable Long id) {
 
         EmpresaDto dto = servico.buscarPorId(id);
 
@@ -51,7 +52,8 @@ public class EmpresaControle {
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<EmpresaDto>> cadastrar(@RequestBody Empresa empresa) {
+    public ResponseEntity<EntityModel<EmpresaDto>> cadastrar(
+            @RequestBody Empresa empresa) {
 
         EmpresaDto dto = servico.cadastrar(empresa);
 
@@ -69,8 +71,33 @@ public class EmpresaControle {
         return ResponseEntity.ok(assembler.toModel(dto));
     }
 
+    @PostMapping("/{empresaId}/usuario/{usuarioId}")
+    public ResponseEntity<EntityModel<EmpresaDto>> associarUsuario(
+            @PathVariable Long empresaId,
+            @PathVariable Long usuarioId) {
+
+        EmpresaDto dto = servico.associarUsuario(
+                empresaId,
+                usuarioId);
+
+        return ResponseEntity.ok(assembler.toModel(dto));
+    }
+
+    @DeleteMapping("/{empresaId}/usuario/{usuarioId}")
+    public ResponseEntity<EntityModel<EmpresaDto>> desassociarUsuario(
+            @PathVariable Long empresaId,
+            @PathVariable Long usuarioId) {
+
+        EmpresaDto dto = servico.desassociarUsuario(
+                empresaId,
+                usuarioId);
+
+        return ResponseEntity.ok(assembler.toModel(dto));
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(
+            @PathVariable Long id) {
 
         servico.deletar(id);
 
