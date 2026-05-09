@@ -135,6 +135,34 @@ DELETE /empresa/{id}
 
 ---
 
+## Associar usuário à empresa
+
+```http
+POST /empresa/{empresaId}/usuario/{usuarioId}
+```
+
+### Exemplo
+
+```http
+POST /empresa/1/usuario/1
+```
+
+---
+
+## Desassociar usuário da empresa
+
+```http
+DELETE /empresa/{empresaId}/usuario/{usuarioId}
+```
+
+### Exemplo
+
+```http
+DELETE /empresa/1/usuario/1
+```
+
+---
+
 # Usuário
 
 **Base URL:** `/usuario`
