@@ -23,6 +23,8 @@ import com.autobots.automanager.enumeracoes.TipoDocumento;
 import com.autobots.automanager.enumeracoes.TipoVeiculo;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
 
+//21070721
+
 @SpringBootApplication
 public class AutomanagerApplication implements CommandLineRunner {
 
