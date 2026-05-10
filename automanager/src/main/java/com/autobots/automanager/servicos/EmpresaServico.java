@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.dtos.EmpresaDto;
+import com.autobots.automanager.dtos.UsuarioDto;
 import com.autobots.automanager.entitades.Empresa;
 import com.autobots.automanager.entitades.Endereco;
 import com.autobots.automanager.entitades.Mercadoria;
 import com.autobots.automanager.entitades.Servico;
 import com.autobots.automanager.entitades.Telefone;
 import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.entitades.Veiculo;
 import com.autobots.automanager.entitades.Venda;
 import com.autobots.automanager.excecoes.EntidadeNaoEncontradaException;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
@@ -64,8 +66,14 @@ public class EmpresaServico {
                         new EntidadeNaoEncontradaException(
                                 "Empresa não encontrada: " + id));
 
-        empresa.setRazaoSocial(dados.getRazaoSocial());
-        empresa.setNomeFantasia(dados.getNomeFantasia());
+        // atualização parcial
+        if (dados.getRazaoSocial() != null) {
+            empresa.setRazaoSocial(dados.getRazaoSocial());
+        }
+
+        if (dados.getNomeFantasia() != null) {
+            empresa.setNomeFantasia(dados.getNomeFantasia());
+        }
 
         if (dados.getEndereco() != null
                 && dados.getEndereco().getId() != null) {
@@ -164,11 +172,13 @@ public class EmpresaServico {
         dto.setCadastro(e.getCadastro());
 
         if (e.getUsuarios() != null) {
-            dto.setUsuarioIds(
-                    e.getUsuarios()
-                            .stream()
-                            .map(Usuario::getId)
-                            .collect(Collectors.toSet()));
+
+            Set<UsuarioDto> usuarios = e.getUsuarios()
+                    .stream()
+                    .map(this::paraUsuarioDto)
+                    .collect(Collectors.toSet());
+
+            dto.setUsuarios(usuarios);
         }
 
         if (e.getMercadorias() != null) {
@@ -192,6 +202,42 @@ public class EmpresaServico {
                     e.getVendas()
                             .stream()
                             .map(Venda::getId)
+                            .collect(Collectors.toSet()));
+        }
+
+        return dto;
+    }
+
+    private UsuarioDto paraUsuarioDto(Usuario u) {
+
+        UsuarioDto dto = new UsuarioDto();
+
+        dto.setId(u.getId());
+        dto.setNome(u.getNome());
+        dto.setNomeSocial(u.getNomeSocial());
+        dto.setPerfis(u.getPerfis());
+
+        if (u.getMercadorias() != null) {
+            dto.setMercadoriaIds(
+                    u.getMercadorias()
+                            .stream()
+                            .map(Mercadoria::getId)
+                            .collect(Collectors.toSet()));
+        }
+
+        if (u.getVendas() != null) {
+            dto.setVendaIds(
+                    u.getVendas()
+                            .stream()
+                            .map(Venda::getId)
+                            .collect(Collectors.toSet()));
+        }
+
+        if (u.getVeiculos() != null) {
+            dto.setVeiculoIds(
+                    u.getVeiculos()
+                            .stream()
+                            .map(Veiculo::getId)
                             .collect(Collectors.toSet()));
         }
 

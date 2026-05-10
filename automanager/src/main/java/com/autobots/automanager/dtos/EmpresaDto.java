@@ -6,11 +6,13 @@ import lombok.Data;
 
 @Data
 public class EmpresaDto {
+
     private Long id;
     private String razaoSocial;
     private String nomeFantasia;
     private Date cadastro;
-    private Set<Long> usuarioIds;
+
+    private Set<UsuarioDto> usuarios;
     private Set<Long> mercadoriaIds;
     private Set<Long> servicoIds;
     private Set<Long> vendaIds;
