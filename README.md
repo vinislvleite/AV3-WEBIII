@@ -53,15 +53,19 @@ cd automanager
 
 ## Executar a aplicação
 
-```bash
-./mvnw spring-boot:run ou pelo botão da sua IDE
-```
-
-Ou no Windows:
+Linux/Mac:
 
 ```bash
-mvnw.cmd spring-boot:run ou pelo botão da sua IDE
+./mvnw spring-boot:run
 ```
+
+Windows:
+
+```bash
+mvnw.cmd spring-boot:run
+```
+
+Ou execute pela sua IDE.
 
 ---
 
@@ -73,33 +77,19 @@ http://localhost:8080
 
 ---
 
-# Empresa
+# Fluxo Recomendado de Testes da API
 
-**Base URL:** `/empresa`
+Os IDs utilizados nos exemplos consideram um banco vazio.
 
-## Listar empresas
-
-```http
-GET /empresa
-```
+A sequência abaixo segue a ordem correta de dependências entre entidades.
 
 ---
 
-## Buscar empresa por ID
-
-```http
-GET /empresa/{id}
-```
-
----
-
-## Cadastrar empresa
+# 1. Cadastrar Empresa
 
 ```http
 POST /empresa
 ```
-
-### Body
 
 ```json
 {
@@ -111,37 +101,43 @@ POST /empresa
 
 ---
 
-## Atualizar empresa
+# 2. Cadastrar Usuários
+
+## Cliente
 
 ```http
-PUT /empresa/{id}
+POST /usuario
 ```
-
-### Body
 
 ```json
 {
-  "nomeFantasia": "AutoManager Global"
+  "nome": "Vinícius Leite",
+  "nomeSocial": "Vini",
+  "perfis": ["CLIENTE"]
 }
 ```
 
 ---
 
-## Remover empresa
+## Funcionário
 
 ```http
-DELETE /empresa/{id}
+POST /usuario
+```
+
+```json
+{
+  "nome": "Carlos Silva",
+  "nomeSocial": "Carlos",
+  "perfis": ["FUNCIONARIO"]
+}
 ```
 
 ---
 
-## Associar usuário à empresa
+# 3. Associar Usuários à Empresa
 
-```http
-POST /empresa/{empresaId}/usuario/{usuarioId}
-```
-
-### Exemplo
+## Associar Cliente
 
 ```http
 POST /empresa/1/usuario/1
@@ -149,220 +145,66 @@ POST /empresa/1/usuario/1
 
 ---
 
-## Desassociar usuário da empresa
+## Associar Funcionário
 
 ```http
-DELETE /empresa/{empresaId}/usuario/{usuarioId}
-```
-
-### Exemplo
-
-```http
-DELETE /empresa/1/usuario/1
+POST /empresa/1/usuario/2
 ```
 
 ---
 
-# Usuário
+# 4. Criar Credenciais
 
-**Base URL:** `/usuario`
-
-## Listar usuários
+## Credencial de Senha
 
 ```http
-GET /usuario
+POST /credencial-senha/usuario/1
 ```
-
----
-
-## Buscar usuário por ID
-
-```http
-GET /usuario/{id}
-```
-
----
-
-## Cadastrar usuário
-
-```http
-POST /usuario
-```
-
-### Body
 
 ```json
 {
-  "nome": "Vinícius Leite",
-  "nomeSocial": "Vini",
-  "perfis": ["CLIENTE", "FUNCIONARIO"]
+  "nomeUsuario": "vinicius",
+  "senha": "123"
 }
 ```
 
 ---
 
-## Atualizar usuário
+## Credencial Código de Barras
 
 ```http
-PUT /usuario/{id}
+POST /credencial/codigo-barra/usuario/2
 ```
-
-### Body
 
 ```json
 {
-  "nomeSocial": "Vini Dev"
+  "codigo": 123456789
 }
 ```
 
 ---
 
-## Remover usuário
+# 5. Cadastrar Veículo
 
 ```http
-DELETE /usuario/{id}
+POST /veiculo/proprietario/1
 ```
-
----
-
-# Veículo
-
-**Base URL:** `/veiculo`
-
-## Listar veículos
-
-```http
-GET /veiculo
-```
-
----
-
-## Buscar veículo por ID
-
-```http
-GET /veiculo/{id}
-```
-
----
-
-## Cadastrar veículo
-
-```http
-POST /veiculo/proprietario/{proprietarioId}
-```
-
-### Body
 
 ```json
 {
-  "tipo": "CARRO",
-  "modelo": "Samsung Odyssey G3 Edition",
+  "tipo": "SUV",
+  "modelo": "Toyota Corolla Cross",
   "placa": "DEV-2026"
 }
 ```
 
 ---
 
-## Atualizar veículo
-
-```http
-PUT /veiculo/{id}
-```
-
----
-
-## Remover veículo
-
-```http
-DELETE /veiculo/{id}
-```
-
----
-
-# Venda
-
-**Base URL:** `/venda`
-
-## Listar vendas
-
-```http
-GET /venda
-```
-
----
-
-## Buscar venda por ID
-
-```http
-GET /venda/{id}
-```
-
----
-
-## Cadastrar venda
-
-```http
-POST /venda
-```
-
-### Body
-
-```json
-{
-  "identificacao": "V-2026-001",
-  "clienteId": 1,
-  "funcionarioId": 2,
-  "veiculoId": 1,
-  "mercadoriaIds": [1],
-  "servicoIds": [1]
-}
-```
-
----
-
-## Atualizar venda
-
-```http
-PUT /venda/{id}
-```
-
----
-
-## Remover venda
-
-```http
-DELETE /venda/{id}
-```
-
----
-
-# Mercadoria
-
-**Base URL:** `/mercadoria`
-
-## Listar mercadorias
-
-```http
-GET /mercadoria
-```
-
----
-
-## Buscar mercadoria por ID
-
-```http
-GET /mercadoria/{id}
-```
-
----
-
-## Cadastrar mercadoria
+# 6. Cadastrar Mercadoria
 
 ```http
 POST /mercadoria
 ```
-
-### Body
 
 ```json
 {
@@ -376,49 +218,11 @@ POST /mercadoria
 
 ---
 
-## Atualizar mercadoria
-
-```http
-PUT /mercadoria/{id}
-```
-
----
-
-## Remover mercadoria
-
-```http
-DELETE /mercadoria/{id}
-```
-
----
-
-# Serviço
-
-**Base URL:** `/servico`
-
-## Listar serviços
-
-```http
-GET /servico
-```
-
----
-
-## Buscar serviço por ID
-
-```http
-GET /servico/{id}
-```
-
----
-
-## Cadastrar serviço
+# 7. Cadastrar Serviço
 
 ```http
 POST /servico
 ```
-
-### Body
 
 ```json
 {
@@ -430,108 +234,215 @@ POST /servico
 
 ---
 
-## Atualizar serviço
+# 8. Cadastrar Venda
 
 ```http
-PUT /servico/{id}
+POST /venda
+```
+
+```json
+{
+  "identificacao": "V-2026-001",
+  "cliente": { "id": 1 },
+  "funcionario": { "id": 2 },
+  "veiculo": { "id": 1 },
+  "mercadorias": [{ "id": 1 }],
+  "servicos": [{ "id": 1 }]
+}
 ```
 
 ---
 
-## Remover serviço
+# 9. Testar Listagens
+
+## Empresas
 
 ```http
-DELETE /servico/{id}
+GET /empresa
 ```
 
 ---
 
-# Credenciais
-
-## Credencial de Senha
-
-**Base URL:** `/credencial-senha`
-
-### Listar credenciais
+## Usuários
 
 ```http
-GET /credencial-senha
+GET /usuario
 ```
 
 ---
 
-### Buscar credencial por ID
+## Veículos
 
 ```http
-GET /credencial-senha/{id}
+GET /veiculo
 ```
 
 ---
 
-### Criar credencial
+## Mercadorias
 
 ```http
-POST /credencial-senha/usuario/{usuarioId}
+GET /mercadoria
 ```
 
 ---
 
-### Atualizar credencial
+## Serviços
 
 ```http
-PUT /credencial-senha/{id}
+GET /servico
 ```
 
 ---
 
-### Remover credencial
+## Vendas
 
 ```http
-DELETE /credencial-senha/{id}
+GET /venda
 ```
 
 ---
 
-# Credencial Código de Barras
+# 10. Testar Buscas por ID
 
-**Base URL:** `/credencial/codigo-barra`
-
-### Listar credenciais
+## Empresa
 
 ```http
-GET /credencial/codigo-barra
+GET /empresa/1
 ```
 
 ---
 
-### Buscar credencial por ID
+## Usuário
 
 ```http
-GET /credencial/codigo-barra/{id}
+GET /usuario/1
 ```
 
 ---
 
-### Criar credencial
+## Veículo
 
 ```http
-POST /credencial/codigo-barra/usuario/{usuarioId}
+GET /veiculo/1
 ```
 
 ---
 
-### Atualizar credencial
+## Mercadoria
 
 ```http
-PUT /credencial/codigo-barra/{id}
+GET /mercadoria/1
 ```
 
 ---
 
-### Remover credencial
+## Serviço
 
 ```http
-DELETE /credencial/codigo-barra/{id}
+GET /servico/1
+```
+
+---
+
+## Venda
+
+```http
+GET /venda/1
+```
+
+---
+
+# 11. Testar Atualizações
+
+## Atualizar Empresa
+
+```http
+PUT /empresa/1
+```
+
+```json
+{
+  "nomeFantasia": "AutoManager Global"
+}
+```
+
+---
+
+## Atualizar Usuário
+
+```http
+PUT /usuario/1
+```
+
+```json
+{
+  "nomeSocial": "Vini Dev"
+}
+```
+
+---
+
+## Atualizar Venda
+
+```http
+PUT /venda/1
+```
+
+```json
+{
+  "identificacao": "V-2026-999"
+}
+```
+
+---
+
+# 12. Testar Remoções
+
+## Remover Venda
+
+```http
+DELETE /venda/1
+```
+
+---
+
+## Remover Serviço
+
+```http
+DELETE /servico/1
+```
+
+---
+
+## Remover Mercadoria
+
+```http
+DELETE /mercadoria/1
+```
+
+---
+
+## Remover Veículo
+
+```http
+DELETE /veiculo/1
+```
+
+---
+
+## Remover Usuário
+
+```http
+DELETE /usuario/1
+```
+
+---
+
+## Remover Empresa
+
+```http
+DELETE /empresa/1
 ```
 
 ---
